@@ -4,9 +4,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { Button } from "./ui/button";
 import Logout from "./Logout";
-import { User } from "@supabase/supabase-js";
+import { createClient } from "@/utils/supabase/server";
 
-const Navbar = ({ user }: { user: User | undefined }) => {
+const Navbar = async () => {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const userMetadata = user?.user_metadata;
+
   return (
     <header className="px-5 py-3 bg-white shadow-sm font-work-sans">
       <nav className="flex justify-between items-center">
@@ -16,13 +22,16 @@ const Navbar = ({ user }: { user: User | undefined }) => {
         <div className="flex items-center gap-5 text-black">
           {user ? (
             <>
-              <Link href="/startup/create">
+              <Link href="/create">
                 <span>Create</span>
               </Link>
               <Logout />
-              <Link href={`/creator/${"#"}`}>
+              <Link href={`/creator/${user?.id}`}>
                 <Avatar>
-                  <AvatarImage src={"#"} alt={"hello"} />
+                  <AvatarImage
+                    src={userMetadata?.avatar_url}
+                    alt={userMetadata?.full_name}
+                  />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </Link>

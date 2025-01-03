@@ -1,42 +1,18 @@
-"use client";
+"use server";
 import SearchForm from "@/components/SearchForm";
 import SnapshotsCard from "@/components/SnapshotsCard";
-import { createClient } from "@/utils/supabase/client";
-import { Session } from "@supabase/supabase-js";
-import { redirect } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { getSnapshots } from "@/lib/queries";
 
 const Snapshots = async ({
   searchParams,
-  session,
 }: {
   searchParams: Promise<{ query?: string }>;
-  session: Session | null;
 }) => {
   const query = (await searchParams).query;
-  const supabase = createClient();
-  const [snapshots, setSnapshots] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const fetchSnapshots = async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase.from("snapshots").select("*");
-      if (error) {
-        console.error("error fetching data", error.message);
-      }
-      setSnapshots(data!);
-    } catch (error) {
-      console.error("Unexpected error", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    if (session) {
-      fetchSnapshots();
-    }
-    redirect("/");
-  }, [session]);
+
+  const snapshots = await getSnapshots();
+
+  console.log(snapshots);
 
   return (
     <main>

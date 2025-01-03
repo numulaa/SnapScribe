@@ -1,9 +1,16 @@
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { loginWithGoogle } from "@/lib/auth-action";
-import Image from "next/image";
+import { createClient } from "@/utils/supabase/server";
 
-export default function Home() {
+import Image from "next/image";
+import Link from "next/link";
+
+export default async function Home() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   return (
     <main>
       <section className="pink_container">
@@ -12,11 +19,19 @@ export default function Home() {
         <p className="sub-heading !max-w-3xl">
           Transform Your Screenshots Into Meaningful Shareable Insights
         </p>
-        <form action={loginWithGoogle}>
-          <Button type="submit" className="mt-8" variant={"hero"}>
-            Transform now
-          </Button>
-        </form>
+        {user ? (
+          <Link href="/create">
+            <Button type="submit" className="mt-8" variant={"hero"}>
+              Transform now
+            </Button>
+          </Link>
+        ) : (
+          <form action={loginWithGoogle}>
+            <Button type="submit" className="mt-8" variant={"hero"}>
+              Get Started
+            </Button>
+          </form>
+        )}
       </section>
       <section className="section_container">
         <h2 className="heading2">Built for you</h2>

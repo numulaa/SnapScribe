@@ -45,8 +45,8 @@ export async function signup(formData: FormData) {
 }
 
 export async function logout() {
-  const supabase = createClient();
-  const { error } = (await supabase).auth.signOut();
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signOut();
   if (error) {
     console.error("error logging out", error.message);
   }
@@ -68,5 +68,5 @@ export async function loginWithGoogle() {
   if (error) {
     console.error("Error logging in", error.message);
   }
-  redirect("/snapshots");
+  redirect(data.url!);
 }
