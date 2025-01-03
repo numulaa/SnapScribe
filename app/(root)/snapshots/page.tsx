@@ -1,7 +1,6 @@
-"use server";
+"use client";
 import SearchForm from "@/components/SearchForm";
-import SnapshotsCard from "@/components/SnapshotsCard";
-import { getSnapshots } from "@/lib/queries";
+import SnapshotsLists from "@/components/SnapshotsLists";
 
 const Snapshots = async ({
   searchParams,
@@ -9,10 +8,6 @@ const Snapshots = async ({
   searchParams: Promise<{ query?: string }>;
 }) => {
   const query = (await searchParams).query;
-
-  const snapshots = await getSnapshots();
-
-  console.log(snapshots);
 
   return (
     <main>
@@ -28,13 +23,7 @@ const Snapshots = async ({
         <h2 className="font-semibold text-3xl">
           {query ? `Search results for "${query}"` : "All snapshots"}
         </h2>
-        <ul className="mt-7 card_grid">
-          {snapshots && snapshots?.length > 0
-            ? snapshots.map((data) => (
-                <SnapshotsCard key={data.id} data={data} />
-              ))
-            : "No snapshots found"}
-        </ul>
+        <SnapshotsLists />
       </section>
     </main>
   );

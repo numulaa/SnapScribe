@@ -1,4 +1,5 @@
 import { EyeIcon } from "lucide-react";
+import Link from "next/link";
 import Image from "next/image";
 
 export type SnapshotsCardType = {
@@ -8,6 +9,7 @@ export type SnapshotsCardType = {
   description: string;
   createdAt: Date;
   extractedText: string;
+  imageUrl: string;
 };
 const SnapshotsCard = ({ data }: { data: SnapshotsCardType }) => {
   return (
@@ -24,9 +26,9 @@ const SnapshotsCard = ({ data }: { data: SnapshotsCardType }) => {
           {/* <Link href={`/user/${author?._id}`}> */}
           <p className="text-16-medium line-clamp-1">Creator name</p>
           {/* </Link> */}
-          {/* <Link href={`/startup/${_id}`}> */}
-          <h3 className="text-26-semibold line-clamp-1">Content title</h3>
-          {/* </Link> */}
+          <Link href={`/snapshot/${data.id}`}>
+            <h3 className="text-26-semibold line-clamp-1">{data.title}</h3>
+          </Link>
         </div>
 
         {/* <Link href={`/user/${author?._id}`}> */}
@@ -39,9 +41,13 @@ const SnapshotsCard = ({ data }: { data: SnapshotsCardType }) => {
         />
         {/* </Link> */}
       </div>
-      {/* <Link href={`/startup/${_id}`}> */}
+      {/* <Link href={`/snapshot/${_id}`}> */}
       <p className="startup-card_desc">Description goes here</p>
-      <img src="/logo.png" alt="startup image" className="startup-card_img" />
+      <img
+        src={data.imageUrl}
+        alt="startup image"
+        className="startup-card_img"
+      />
       {/* </Link> */}
       <div className="flex-between gap-3 mt-5">
         {/* <Link href={`/?query=${category?.toLowerCase()}`}> */}
