@@ -1,4 +1,3 @@
-"use client";
 import SearchForm from "@/components/SearchForm";
 import SnapshotsLists from "@/components/SnapshotsLists";
 

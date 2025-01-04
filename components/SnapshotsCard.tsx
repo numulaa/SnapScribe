@@ -1,21 +1,14 @@
+"use client";
 import { EyeIcon } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { Tables } from "@/database.types";
 
-export type SnapshotsCardType = {
-  id: number;
-  userId: number;
-  title: string;
-  description: string;
-  createdAt: Date;
-  extractedText: string;
-  imageUrl: string;
-};
-const SnapshotsCard = ({ data }: { data: SnapshotsCardType }) => {
+const SnapshotsCard = ({ data }: { data: Tables<"snapshots"> }) => {
   return (
-    <li className="startup-card group">
+    <li className="snapshot-card group">
       <div className="flex-between">
-        <p className="startup-card_date">Date</p>
+        <p className="snapshot-card_date">Date</p>
         <div className="flex gap-1.5">
           <EyeIcon className="size-6 text-primary" />
           <span className="text-16-medium">10</span>
@@ -42,19 +35,19 @@ const SnapshotsCard = ({ data }: { data: SnapshotsCardType }) => {
         {/* </Link> */}
       </div>
       {/* <Link href={`/snapshot/${_id}`}> */}
-      <p className="startup-card_desc">Description goes here</p>
+      <p className="snapshot-card_desc">Description goes here</p>
       <img
-        src={data.imageUrl}
-        alt="startup image"
-        className="startup-card_img"
+        src={data.imageUrl!}
+        alt="snapshot image"
+        className="snapshot-card_img"
       />
       {/* </Link> */}
       <div className="flex-between gap-3 mt-5">
         {/* <Link href={`/?query=${category?.toLowerCase()}`}> */}
         <p className="text-16-medium">categories go here</p>
         {/* </Link> */}
-        <button className="startup-card_btn">
-          {/* <Link href={`/startup/${_id}`}>Details</Link> */}
+        <button className="snapshot-card_btn">
+          {/* <Link href={`/snapshot/${_id}`}>Details</Link> */}
           Details
         </button>
       </div>

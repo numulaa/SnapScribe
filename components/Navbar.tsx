@@ -12,7 +12,7 @@ const Navbar = async () => {
     data: { user },
   } = await supabase.auth.getUser();
   const userMetadata = user?.user_metadata;
-
+  console.log(userMetadata);
   return (
     <header className="px-5 py-3 bg-white shadow-sm font-work-sans">
       <nav className="flex justify-between items-center">

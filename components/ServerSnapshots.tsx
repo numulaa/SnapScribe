@@ -5,7 +5,7 @@ import { createClient } from "@/utils/supabase/client";
 import { Tables } from "@/database.types";
 import RealtimeSnapshots from "./RealtimeSnapshots";
 
-const SnapshotsLists = () => {
+const ServerSnapshots = () => {
   const supabase = createClient();
   const [loading, setLoading] = useState(true);
   const [serverSnapshots, setServerSnapshots] = useState<Tables<"snapshots">[]>(
@@ -39,4 +39,4 @@ const SnapshotsLists = () => {
   return <RealtimeSnapshots serverSnapshots={serverSnapshots} />;
 };
 
-export default SnapshotsLists;
+export default ServerSnapshots;
