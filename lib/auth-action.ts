@@ -20,7 +20,7 @@ export async function login(formData: FormData) {
     redirect("/error");
   }
 
-  revalidatePath("/snapshots", "layout");
+  revalidatePath("/", "layout");
   redirect("/snapshots");
 }
 
@@ -40,7 +40,7 @@ export async function signup(formData: FormData) {
     redirect("/error");
   }
 
-  revalidatePath("/snapshots", "layout");
+  revalidatePath("/", "layout");
   redirect("/snapshots");
 }
 
