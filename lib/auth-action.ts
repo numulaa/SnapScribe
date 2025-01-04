@@ -63,10 +63,13 @@ export async function loginWithGoogle() {
         access_type: "offline",
         prompt: "consent",
       },
+      redirectTo: "http://localhost:3000/api/auth/callback",
     },
   });
   if (error) {
     console.error("Error logging in", error.message);
   }
-  redirect(data.url!);
+  if (data.url) {
+    redirect(data.url);
+  }
 }
