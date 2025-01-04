@@ -1,3 +1,6 @@
+import { redirect } from "next/navigation";
+import { createClient } from "@/utils/supabase/server";
+
 import SearchForm from "@/components/SearchForm";
 import SnapshotsLists from "@/components/SnapshotsLists";
 
@@ -7,7 +10,12 @@ const Snapshots = async ({
   searchParams: Promise<{ query?: string }>;
 }) => {
   const query = (await searchParams).query;
+  const supabase = await createClient();
 
+  const { data, error } = await supabase.auth.getUser();
+  if (error || !data?.user) {
+    redirect("/login");
+  }
   return (
     <main>
       <section className="pink_container">

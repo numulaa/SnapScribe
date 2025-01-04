@@ -26,11 +26,11 @@ export default async function Home() {
             </Button>
           </Link>
         ) : (
-          <form action={loginWithGoogle}>
+          <Link href="/login">
             <Button type="submit" className="mt-8" variant={"hero"}>
               Get Started
             </Button>
-          </form>
+          </Link>
         )}
       </section>
       <section className="section_container">
