@@ -18,13 +18,9 @@ const Navbar = async () => {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Cast user_metadata to the defined type
-  const userMetadata = user?.user_metadata as UserMetadata;
-
-  const avatar_url = userMetadata?.avatar_url || "";
-  const full_name = userMetadata?.full_name || "";
-
-  console.log({ avatar_url, full_name });
+  // Destructure user_metadata with defaults
+  const { avatar_url = "", full_name = "" } =
+    (user?.user_metadata as UserMetadata) || {};
 
   const userInitials = full_name
     ? full_name
