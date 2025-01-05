@@ -8,8 +8,8 @@ import { createClient } from "@/utils/supabase/server";
 
 // Define the user_metadata type
 type UserMetadata = {
-  avatar_url?: string;
-  full_name?: string;
+  avatar_url: string;
+  full_name: string;
 };
 
 const Navbar = async () => {
@@ -24,15 +24,13 @@ const Navbar = async () => {
   const avatar_url = userMetadata?.avatar_url || "";
   const full_name = userMetadata?.full_name || "";
 
-  console.log({ avatar_url, full_name });
-
   const userInitials = full_name
     ? full_name
         .split(" ")
         .map((name: string) => name[0])
         .join("")
         .toUpperCase()
-    : "";
+    : user?.email?.substring(0, 2);
 
   return (
     <header className="px-5 py-3 bg-white shadow-sm font-work-sans">
@@ -43,6 +41,9 @@ const Navbar = async () => {
         <div className="flex items-center gap-5 text-black">
           {user?.id ? (
             <>
+              <Link href="/snapshots">
+                <span>Snapshots</span>
+              </Link>
               <Link href="/create">
                 <span>Create</span>
               </Link>
