@@ -3,45 +3,41 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/utils/supabase/server";
+import { z } from "zod";
 
-export async function login(formData: FormData) {
+const ValidateLoginForm = () => {
+  const Schema = z.object({
+    email: z.string().email("Invalid email address"),
+    password: z.string(),
+  });
+};
+
+export async function login(obj: any) {
   const supabase = await createClient();
-
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-  const data = {
-    email: formData.get("email") as string,
-    password: formData.get("password") as string,
-  };
-
-  const { error } = await supabase.auth.signInWithPassword(data);
+  const { error } = await supabase.auth.signInWithPassword(obj);
 
   if (error) {
-    redirect("/error");
+    console.log("Login error", error.message);
+    // redirect("/error");
+    return error.message;
   }
 
   revalidatePath("/", "layout");
   redirect("/");
 }
 
-export async function signup(formData: FormData) {
+export async function signup(obj: any) {
   const supabase = await createClient();
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-  const data = {
-    email: formData.get("email") as string,
-    password: formData.get("password") as string,
-  };
-
-  const { error } = await supabase.auth.signUp(data);
+  const { error, data } = await supabase.auth.signUp(obj);
 
   if (error) {
     redirect("/error");
   }
 
-  revalidatePath("/", "layout");
-  redirect("/");
+  // revalidatePath("/", "layout");
+  // redirect("/");
+  return { error, data };
 }
 
 export async function logout() {
@@ -49,6 +45,7 @@ export async function logout() {
   const { error } = await supabase.auth.signOut();
   if (error) {
     console.error("error logging out", error.message);
+    return error.message;
   }
   revalidatePath("/", "layout");
   redirect("/");
@@ -68,6 +65,7 @@ export async function loginWithGoogle() {
   });
   if (error) {
     console.error("Error logging in", error.message);
+    return error.message;
   }
   if (data.url) {
     redirect(data.url);
