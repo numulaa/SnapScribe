@@ -3,7 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 
 import SearchForm from "@/components/SearchForm";
 import SnapshotsLists from "@/components/SnapshotsPage/SnapshotsLists";
-import CheckData from "@/components/SnapshotsPage/CheckData";
+import CheckData from "@/components/CreatePage/CreateForm";
 
 const Snapshots = async ({
   searchParams,
