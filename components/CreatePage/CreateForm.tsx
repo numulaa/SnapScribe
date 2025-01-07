@@ -1,4 +1,6 @@
 "use client";
+import { v4 as uuidv4 } from "uuid";
+import imageCompression from "browser-image-compression";
 import { createClient } from "@/utils/supabase/client";
 import { QueryData, QueryResult } from "@supabase/supabase-js";
 import { useCallback, useState, ChangeEvent } from "react";
@@ -8,6 +10,11 @@ import { CloudUploadIcon } from "lucide-react";
 import Image from "next/image";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
+type UploadProps = {
+  file: File;
+  bucket: string;
+  folder?: string;
+};
 
 const CreateForm = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -28,6 +35,55 @@ const CreateForm = () => {
   //     .upload(req.file.path);
   // };
 
+  // TODO: Move this function to lib
+  // UPLOAD IMAGE TO SUPABASE
+  const uploadImageToSupabase = async ({
+    file,
+    bucket,
+    folder,
+  }: UploadProps) => {
+    const fileName = file.name;
+    const fileExtension = fileName.slice(fileName.lastIndexOf(".") + 1);
+    const path = `${folder ? folder + "/" : ""}${uuidv4()}.${fileExtension}`;
+    try {
+      file = await imageCompression(file, {
+        maxSizeMB: 1,
+      });
+    } catch (error) {
+      console.error(error);
+      return { imageUrl: "", error: "Image compression failed" };
+    }
+    const { data, error } = await supabase.storage
+      .from(bucket)
+      .upload(path, file);
+    if (error) {
+      return { imageUrl: "", error: "Image upload failed" };
+    }
+    const imageUrl = `${process.env
+      .NEXT_PUBLIC_SUPABASE_URL!}/storage/v1/object/public/${bucket}/${
+      data?.path
+    }`;
+    return { imageUrl, error: "" };
+  };
+
+  const handleImageUpload = async () => {
+    if (!selectedImage) {
+      return;
+    }
+    setIsLoading(true);
+    const { imageUrl, error } = await uploadImageToSupabase({
+      file: selectedImage,
+      bucket: "raw_snapshots",
+    });
+    if (error) {
+      setIsLoading(false);
+      console.error("Error uploading image", error);
+    }
+    setIsLoading(false);
+    setSelectedImage(null);
+    setUploadedImagePath(imageUrl);
+    console.log("Successfully uploaded the image");
+  };
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
       const image = acceptedFiles[0];
@@ -46,10 +102,11 @@ const CreateForm = () => {
       setImageUrl(newImageUrl);
     }
   };
-  console.log(imageUrl, selectedImage);
   return (
     <div className="flex flex-col items-center justify-center max-w-[400] md:max-w-[1000] rounded-2xl p-12 bg-primary-100">
-      <form action="" className="w-full h-full flex flex-col gap-6">
+      <form
+        action={handleImageUpload}
+        className="w-full h-full flex flex-col gap-6">
         <div className="space-y-3 h-full w-full">
           <div {...getRootProps} className="h-full">
             <label
@@ -122,7 +179,9 @@ const CreateForm = () => {
             className=" border-[3px] border-black px-5 py-7 rounded-xl "
           />
         </div>
-        <Button className="snapshot-form_btn">Transform</Button>
+        <Button type="submit" className="snapshot-form_btn">
+          Transform
+        </Button>
       </form>
     </div>
   );
