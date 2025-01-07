@@ -3,14 +3,16 @@ import { Tables } from "@/database.types";
 import { createClient } from "@/utils/supabase/client";
 import React, { useEffect, useState } from "react";
 import SnapshotsCard from "./SnapshotsCard";
+import { SnapshotsWithUserProfileType } from "@/lib/types";
 
 const RealtimeSnapshots = ({
   serverSnapshots,
 }: {
-  serverSnapshots: Tables<"snapshots">[];
+  serverSnapshots: SnapshotsWithUserProfileType[];
 }) => {
   const supabase = createClient();
   const [snapshots, setSnapshots] = useState(serverSnapshots);
+
   useEffect(() => {
     const channel = supabase
       .channel("realtime snapshots")
@@ -18,13 +20,16 @@ const RealtimeSnapshots = ({
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "snapshots" },
         (payload) => {
-          setSnapshots([...snapshots, payload.new as Tables<"snapshots">]);
+          setSnapshots([
+            ...snapshots,
+            payload.new as SnapshotsWithUserProfileType,
+          ]);
         }
       )
       .subscribe();
-    console.log("channel", channel);
     return () => supabase.removeChannel(channel);
   }, [supabase]);
+
   return (
     <ul className="mt-7 card_grid">
       {snapshots && snapshots?.length > 0

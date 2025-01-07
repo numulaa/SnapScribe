@@ -37,6 +37,35 @@ export type Database = {
           title?: string
           user_id?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "snapshots_user_id_fkey1"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_profiles: {
+        Row: {
+          avatar_url: string | null
+          display_name: string | null
+          email: string | null
+          id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          display_name?: string | null
+          email?: string | null
+          id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          display_name?: string | null
+          email?: string | null
+          id?: string
+        }
         Relationships: []
       }
     }
