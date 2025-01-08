@@ -10,6 +10,7 @@ import { CloudUploadIcon } from "lucide-react";
 import Image from "next/image";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
+
 type UploadProps = {
   file: File;
   bucket: string;
@@ -79,6 +80,7 @@ const CreateForm = () => {
       setIsLoading(false);
       console.error("Error uploading image", error);
     }
+
     setIsLoading(false);
     setSelectedImage(null);
     setUploadedImagePath(imageUrl);

@@ -13,10 +13,15 @@ export default async function CreatePage() {
   }
 
   return (
-    <section className="section_container flex flex-col items-center justify-center !min-h-[90vh]">
-      <div className="md:w-6/12 min-h-[50vh]">
-        <CreateForm />
-      </div>
-    </section>
+    <div>
+      <section className="pink_container !min-h-[230px]">
+        <h1 className="heading">Submit Your Snapshot</h1>
+      </section>
+      <section className="section_container flex flex-col items-center justify-center !min-h-[90vh]">
+        <div className="md:w-6/12 min-h-[50vh]">
+          <CreateForm />
+        </div>
+      </section>
+    </div>
   );
 }
